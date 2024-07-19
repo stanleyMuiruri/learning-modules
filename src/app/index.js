@@ -10,9 +10,12 @@ import Question from './Components/Question';
 import Login from './pages/Login';
 import Registration from './pages/Registration';
 
+import toast, { Toaster } from 'react-hot-toast';
+
 const App = () => {
   return (
-      <div>
+    <div>
+      <Toaster/>
           <Navbar />
           <div className='mt-20 min-h-screen'>              
           <Routes>
