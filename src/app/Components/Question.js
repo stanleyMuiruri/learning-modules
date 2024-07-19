@@ -1,22 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 
-const QuizDetails = () => {
+const QuizDetails = ({ user }) => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
+  const [results, setResults] = useState([]);
+  const [totalMarks, setTotalMarks] = useState(0);
 
   useEffect(() => {
+    if (!user) {
+      // Redirect to login page if not authenticated
+      navigate('/login', { state: { from: location } });
+      return;
+    }
+
     async function fetchQuestions() {
       try {
-        const token = localStorage.getItem('access_token'); // Get the token from local storage
-        const response = await axios.get(`/questions/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(`/questions/${id}`);
         setQuestions(response.data);
       } catch (error) {
         console.error('Error fetching questions:', error);
@@ -24,7 +29,7 @@ const QuizDetails = () => {
     }
 
     fetchQuestions();
-  }, [id]);
+  }, [id, navigate, location, user]);
 
   const handleAnswerChange = (questionId, answer) => {
     setAnswers((prevAnswers) => ({
@@ -34,7 +39,7 @@ const QuizDetails = () => {
   };
 
   const handleSubmitAll = async () => {
-    // Check if all questions have been answered
+    const token = localStorage.getItem('access_token');
     const allAnswered = questions.every(question => answers.hasOwnProperty(question.id));
 
     if (!allAnswered) {
@@ -43,20 +48,35 @@ const QuizDetails = () => {
     }
 
     try {
-      const token = localStorage.getItem('access_token'); // Get the token from local storage
-      await axios.post('/question_check_answer', {
-        quiz_id: id,
-        answers,
+      const response = await axios.post('/question_check_answer', {
+        answers: Object.entries(answers).map(([question_id, answer]) => ({
+          question_id,
+          answer
+        })),
       }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      toast.success('Answers submitted successfully!');
+
+      setResults(response.data.results);
+      setTotalMarks(response.data.total_marks);
+
+      toast.success('All answers submitted successfully!');
     } catch (error) {
       console.error('Error submitting answers:', error);
       toast.error('Failed to submit answers.');
     }
+  };
+
+  const getResultMessage = (questionId) => {
+    const result = results.find(res => res.question_id === questionId);
+    return result ? (result.is_correct ? 'Correct' : 'Incorrect') : '';
+  };
+
+  const getResultClass = (questionId) => {
+    const result = results.find(res => res.question_id === questionId);
+    return result ? (result.is_correct ? 'text-green-500' : 'text-red-500') : '';
   };
 
   return (
@@ -74,8 +94,14 @@ const QuizDetails = () => {
                   name={`question-${question.id}`}
                   value={answer}
                   onChange={() => handleAnswerChange(question.id, answer)}
+                  disabled={results.length > 0} // Disable input if results are available
                 />
                 <label htmlFor={`answer-${question.id}-${index}`} className='ml-2'>{answer}</label>
+          {results.length > 0 && (
+            <div className={`mt-2 ${getResultClass(question.id)}`}>
+              {getResultMessage(question.id)}
+            </div>
+          )}
               </div>
             ))}
           </div>
@@ -83,9 +109,16 @@ const QuizDetails = () => {
       ))}
       <button
         onClick={handleSubmitAll}
-        className='bg-blue-500 text-white px-4 py-2 rounded'>
+        className='bg-blue-500 text-white px-4 py-2 rounded'
+        disabled={results.length > 0} 
+      >
         Submit All Answers
       </button>
+      {results.length > 0 && (
+        <div className='mt-4 text-xl font-bold'>
+          Total Marks: {totalMarks}
+        </div>
+      )}
     </div>
   );
 }

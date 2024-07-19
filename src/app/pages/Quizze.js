@@ -13,7 +13,7 @@ const Quizze = () => {
       try {
         const response = await axios.get('/quizes');
         setQuizze(response.data);
-        console.log(response);
+     
       } catch (error) {
         console.error('Error fetching quiz data:', error);
       } finally {

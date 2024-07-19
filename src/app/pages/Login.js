@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-const Login = () => {
+import { useNavigate, useLocation } from 'react-router-dom';
+
+const Login = ({checkSession}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -13,8 +15,13 @@ const Login = () => {
     try {
       const response = await axios.post('/login', { email, password });
       localStorage.setItem('access_token', response.data.access_token);
+      await checkSession
       setError('');
-      navigate('/')
+
+   
+      const from = location.state?.from?.pathname || '/';
+      navigate(from, { replace: true });
+      window.location.reload();
     } catch (err) {
       if (err.response && err.response.data) {
         setError(err.response.data.msg || err.response.data.message);
