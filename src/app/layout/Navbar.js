@@ -24,9 +24,12 @@ const Navbar = () => {
          
           <ul className={`lg:flex lg:items-center lg:pb-0 pb-12 absolute lg:static lg:z-auto z-[-1] left-0 w-full 
             lg:w-auto lg:pl-0 pl-9 transition-all bg-white duration-500 ease-in ${isOpen ? 'top-20' : 'top-[-445px]'}`}>
-                  <li><Link to='/' className={`${linkBaseClass} ${isActive('/') ? activeClass : ''} md:mx-4`}>Home</Link></li>                  
-                  <li><Link to='/quizzes'  className={`${linkBaseClass} ${isActive('/quizzes') ? activeClass : ''} md:mx-4`}>Quizze</Link> </li>
-                  <li><Link to='/flashcards' className={`${linkBaseClass} ${isActive('/flashcards') ? activeClass : ''} md:mx-4`}>FlaskCard</Link> </li>
+            <li><Link to='/' className={`${linkBaseClass} ${isActive('/') ? activeClass : ''} md:mx-4`}>Home</Link></li>                  
+            <li><Link to='/quizzes'  className={`${linkBaseClass} ${isActive('/quizzes') ? activeClass : ''} md:mx-4`}>Quizze</Link> </li>
+            <li><Link to='/flashcards' className={`${linkBaseClass} ${isActive('/flashcards') ? activeClass : ''} md:mx-4`}>FlaskCard</Link> </li>
+            <li><Link to='/login' className={`${linkBaseClass} ${isActive('/login') ? activeClass : ''} md:mx-4`}>Login</Link> </li>
+            <li><Link to='/signup' className={`${linkBaseClass} ${isActive('/signup') ? activeClass : ''} md:mx-4`}>Register</Link> </li>
+          
                   
             
           </ul>
