@@ -14,7 +14,6 @@ const QuizDetails = ({ user }) => {
 
   useEffect(() => {
     if (!user) {
-      // Redirect to login page if not authenticated
       navigate('/login', { state: { from: location } });
       return;
     }
@@ -62,6 +61,7 @@ const QuizDetails = ({ user }) => {
       setResults(response.data.results);
       setTotalMarks(response.data.total_marks);
 
+
       toast.success('All answers submitted successfully!');
     } catch (error) {
       console.error('Error submitting answers:', error);
@@ -70,12 +70,12 @@ const QuizDetails = ({ user }) => {
   };
 
   const getResultMessage = (questionId) => {
-    const result = results.find(res => res.question_id === questionId);
-    return result ? (result.is_correct ? 'Correct' : 'Incorrect') : '';
+    const result = results.find(res => parseInt(res.question_id) === parseInt(questionId));
+    return result ? result.message : '';
   };
 
   const getResultClass = (questionId) => {
-    const result = results.find(res => res.question_id === questionId);
+    const result = results.find(res => parseInt(res.question_id) === parseInt(questionId));
     return result ? (result.is_correct ? 'text-green-500' : 'text-red-500') : '';
   };
 
@@ -97,20 +97,20 @@ const QuizDetails = ({ user }) => {
                   disabled={results.length > 0} // Disable input if results are available
                 />
                 <label htmlFor={`answer-${question.id}-${index}`} className='ml-2'>{answer}</label>
+              </div>
+            ))}
+          </div>
           {results.length > 0 && (
             <div className={`mt-2 ${getResultClass(question.id)}`}>
               {getResultMessage(question.id)}
             </div>
           )}
-              </div>
-            ))}
-          </div>
         </div>
       ))}
       <button
         onClick={handleSubmitAll}
         className='bg-blue-500 text-white px-4 py-2 rounded'
-        disabled={results.length > 0} 
+        disabled={results.length > 0}
       >
         Submit All Answers
       </button>
