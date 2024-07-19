@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
+import { Route, Routes} from 'react-router-dom';
 import Navbar from './layout/Navbar';
 import Home from './pages/Home';
 import Footer from './layout/Footer';
@@ -8,7 +8,7 @@ import Question from './Components/Question';
 import Login from './pages/Login';
 import Registration from './pages/Registration';
 import PostQuizze from './pages/PostQuizze'; 
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import axios from 'axios';
 import FlashcardPage from './pages/Flashcard';
 

@@ -30,7 +30,6 @@ const Registration = () => {
       });
 
       toast.success('User registered successfully!');
-      // Clear form fields after successful registration
       setFirstName('');
       setLastName('');
       setEmail('');
@@ -48,8 +47,8 @@ const Registration = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <Toaster />
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 ">
+     
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6">Register</h2>
         <form onSubmit={handleRegistration}>

@@ -13,7 +13,7 @@ const FlashcardPage = ({ user }) => {
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        const response = await axios.get('/flip_cards'); // Update the URL based on your backend endpoint
+        const response = await axios.get('/flip_cards'); 
         setCards(response.data);
       } catch (error) {
         toast.error('Error fetching flashcards');
@@ -35,7 +35,7 @@ const FlashcardPage = ({ user }) => {
         },
       });
       toast.success('Flip card added successfully');
-      setCards([...cards, response.data]); // Update the cards list with the new card
+      setCards([...cards, response.data]); 
       setShowForm(false);
       setQuestion('');
       setAnswer('');
